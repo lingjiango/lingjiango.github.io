@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>RabbitMQ单机版环境搭建</title>
+    <url>/2020/11/01/RabbitMQ%E5%8D%95%E6%9C%BA%E7%89%88%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h4 id="1-工具准备"><a href="#1-工具准备" class="headerlink" title="1.工具准备"></a>1.工具准备</h4><table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hyper-V</td>
+<td>10.0.18362.1</td>
+<td>虚拟化工具，负责安装多个节点</td>
+</tr>
+<tr>
+<td>CentOS</td>
+<td>7</td>
+<td>Linux操作系统,对应到每台机器</td>
+</tr>
+<tr>
+<td>Erlang</td>
+<td>23.0.2-1.el7.x86_64</td>
+<td>RabbitMQ运行环境</td>
+</tr>
+<tr>
+<td>RabbitMQ</td>
+<td>server-3.8.4-1.el7.noarch</td>
+<td>消息中间件</td>
+</tr>
+<tr>
+<td>Xshell</td>
+<td>5</td>
+<td>远程连接shell工具</td>
+</tr>
+<tr>
+<td>Xftp</td>
+<td>6</td>
+<td>远程文件管理工具</td>
+</tr>
+</tbody></table>
+<h4 id="2-环境搭建及架构描述"><a href="#2-环境搭建及架构描述" class="headerlink" title="2.环境搭建及架构描述"></a>2.环境搭建及架构描述</h4><table>
+<thead>
+<tr>
+<th>机器名称</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Centos7</td>
+<td>单机版</td>
+</tr>
+</tbody></table>
+<h4 id="3-搭建步骤"><a href="#3-搭建步骤" class="headerlink" title="3.搭建步骤"></a>3.搭建步骤</h4><h5 id="3-1-搭建RabbitMQ环境"><a href="#3-1-搭建RabbitMQ环境" class="headerlink" title="3.1 搭建RabbitMQ环境"></a>3.1 搭建RabbitMQ环境</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install socat -y</span><br><span class="line"></span><br><span class="line">rpm -ivh erlang-23.0.2-1.el7.x86_64.rpm</span><br><span class="line">rpm -ivh rabbitmq-server-3.8.5-1.el7.noarch.rpm</span><br><span class="line"></span><br><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br><span class="line"></span><br><span class="line">rabbitmq-server -detached</span><br><span class="line">rabbitmqctl add_user lingjiango 123456</span><br><span class="line">rabbitmqctl set_permissions lingjiango -p / &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;</span><br><span class="line">rabbitmqctl set_user_tags lingjiango administrator</span><br></pre></td></tr></table></figure>
+
+<p>最后，可以通过管理工具来验证一下RabbitMQ是否搭建成功。</p>
+<img src="image-20201101160524887.png" alt="image-20201101160524887" style="zoom:200%;" />]]></content>
+      <categories>
+        <category>RabbitMQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+        <tag>消息中间件</tag>
+      </tags>
+  </entry>
+</search>
