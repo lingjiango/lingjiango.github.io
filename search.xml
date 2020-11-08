@@ -1,6 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Kafka单机版环境搭建</title>
+    <url>/2020/11/08/Kafka%E5%8D%95%E6%9C%BA%E7%89%88%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h4 id="1-工具准备"><a href="#1-工具准备" class="headerlink" title="1.工具准备"></a>1.工具准备</h4><table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hyper-V</td>
+<td>10.0.18362.1</td>
+<td>虚拟化工具，负责安装多个节点</td>
+</tr>
+<tr>
+<td>CentOS</td>
+<td>7</td>
+<td>Linux操作系统,对应到每台机器</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>2.12-1.0.2</td>
+<td>日志收集和消息系统</td>
+</tr>
+<tr>
+<td>Zookeeper</td>
+<td>3.5.8</td>
+<td>分布式协调组件</td>
+</tr>
+<tr>
+<td>Jdk</td>
+<td>1.8</td>
+<td>适配Kafka版本</td>
+</tr>
+<tr>
+<td>Xshell</td>
+<td>5</td>
+<td>远程连接shell工具</td>
+</tr>
+<tr>
+<td>Xftp</td>
+<td>6</td>
+<td>远程文件管理工具</td>
+</tr>
+</tbody></table>
+<h4 id="2-环境搭建及架构描述"><a href="#2-环境搭建及架构描述" class="headerlink" title="2.环境搭建及架构描述"></a>2.环境搭建及架构描述</h4><table>
+<thead>
+<tr>
+<th>机器名称</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Centos7</td>
+<td>单机版</td>
+</tr>
+</tbody></table>
+<h4 id="3-搭建步骤"><a href="#3-搭建步骤" class="headerlink" title="3.搭建步骤"></a>3.搭建步骤</h4><h5 id="3-1-搭建JDK环境"><a href="#3-1-搭建JDK环境" class="headerlink" title="3.1 搭建JDK环境"></a>3.1 搭建JDK环境</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rpm -ivh jdk-8u261-linux-x64.rpm</span><br><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_261-amd64</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-2-搭建ZooKeeper环境"><a href="#3-2-搭建ZooKeeper环境" class="headerlink" title="3.2 搭建ZooKeeper环境"></a>3.2 搭建ZooKeeper环境</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxf apache-zookeeper-3.5.8-bin.tar.gz -C /opt</span><br><span class="line">cd /opt/apache-zookeeper-3.5.8-bin/conf</span><br><span class="line">cp zoo_sample.cfg zoo.cfg</span><br><span class="line">vim zoo.cfg</span><br><span class="line"></span><br><span class="line">dataDir=/var/lingjiango/zookeeper/data</span><br><span class="line"></span><br><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line">export ZOOKEEPER_PREFIX=/opt/apache-zookeeper-3.5.8-bin</span><br><span class="line">export PATH=$PATH:$ZOOKEEPER_PREFIX/bin</span><br><span class="line">export ZOO_LOG_DIR=/var/lingjiango/zookeeper/log</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line"></span><br><span class="line">zkServer.sh status</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-3-搭建Kafka环境"><a href="#3-3-搭建Kafka环境" class="headerlink" title="3.3 搭建Kafka环境"></a>3.3 搭建Kafka环境</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxf kafka_2.12-1.0.2.tgz -C /opt</span><br><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line">export KAFKA_HOME=/opt/kafka_2.12-1.0.2</span><br><span class="line">export PATH=$PATH:$KAFKA_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line"></span><br><span class="line">cd /opt/kafka_2.12-1.0.2/config</span><br><span class="line">vim server.properties</span><br><span class="line"></span><br><span class="line">log.dirs=/var/lingjiango/kafka/kafka-logs</span><br><span class="line">zookeeper.connect=localhost:2181/kafka</span><br><span class="line"></span><br><span class="line">mkdir -p /var/lingjiango/kafka/kafka-logs</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-4-验证搭建成果"><a href="#3-4-验证搭建成果" class="headerlink" title="3.4 验证搭建成果"></a>3.4 验证搭建成果</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">zkServer.sh start</span><br><span class="line">zkServer.sh status</span><br><span class="line"></span><br><span class="line">kafka-server-start.sh -daemon config/server.properties</span><br><span class="line">ps -ef | grep kafka</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kafka-topics.sh --zookeeper localhost:2181/kafka --create --topic topic_1 --partitions 1 --replication-factor 1</span><br><span class="line">kafka-topics.sh --zookeeper localhost:2181/kafka --list</span><br></pre></td></tr></table></figure>
+
+<img src="image-20201109000032124.png" alt="image-20201109000032124" style="zoom:200%;" />
+
+<p>能看到这个图片效果说明单机版的kafka环境搭建完成。</p>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
+        <tag>消息中间件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RabbitMQ单机版环境搭建</title>
     <url>/2020/11/01/RabbitMQ%E5%8D%95%E6%9C%BA%E7%89%88%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h4 id="1-工具准备"><a href="#1-工具准备" class="headerlink" title="1.工具准备"></a>1.工具准备</h4><table>
@@ -62,8 +143,8 @@
         <category>RabbitMQ</category>
       </categories>
       <tags>
-        <tag>RabbitMQ</tag>
         <tag>消息中间件</tag>
+        <tag>RabbitMQ</tag>
       </tags>
   </entry>
 </search>
